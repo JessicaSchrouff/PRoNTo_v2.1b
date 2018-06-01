@@ -63,11 +63,11 @@ end
 
 rotate3d off
 cla(axes_handle, 'reset');
-[y,idx] = sort(fVals);
+[y,idx] = sort(fVals,'descend');
 targpos = targpos(idx);
 
-fp      = cumsum(single(targpos))/sum(single(targpos));
-tp      = cumsum(single(~targpos))/sum(single(~targpos));
+tp      = cumsum(single(targpos))/sum(single(targpos));
+fp      = cumsum(single(~targpos))/sum(single(~targpos));
 
 tp      = [0 ; tp ; 1];
 fp      = [0 ; fp ; 1];
