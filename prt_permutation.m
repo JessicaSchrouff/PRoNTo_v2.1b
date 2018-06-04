@@ -82,46 +82,6 @@ else
         nc=[];
     end
     fdata.nc = nc;
-    
-%     % Find chunks in the data (e.g. temporal correlated samples)
-%     % -------------------------------------------------------------------------
-%     
-%     ids = PRT.fs(fid).id_mat(PRT.model(modelid).input.samp_idx,:);
-%     i=1;
-%     samp_g=unique(ids(:,1));%number of groups
-%     for gid = 1: length(samp_g)
-%         
-%         samp_s=unique(ids(ids(:,1)==samp_g(gid),2)); %number of subjects for specific group
-%         
-%         for sid = 1: length(samp_s)
-%            
-%             samp_m=unique(ids(ids(:,1)==samp_g(gid) & ids(:,2)==samp_s(sid),3)); %number of modality for specific group & subject
-%             
-%             for mid = 1:length(samp_m)
-%                 
-%                 samp_c=unique(ids(ids(:,1)==samp_g(gid) & ids(:,2)==samp_s(sid) & ids(:,3)==samp_m(mid),4)); %number of conditions for specific group & subject & modality
-%                 j=1;
-%                 for cid = 1:length(samp_c)
-%                     
-%                     samp_b=unique(ids(ids(:,1)==samp_g(gid) & ids(:,2)==samp_s(sid) & ids(:,3)==samp_m(mid) & ids(:,4)==samp_c(cid),5));  %number of blocks for specific group & subject & modality & conditions
-%                  
-%                     for bid = 1:length(samp_b)
-%                         
-%                         rg = find((ids(:,1) == samp_g(gid)) & ...
-%                             (ids(:,2) == samp_s(sid)) & ...
-%                             (ids(:,3) == samp_m(mid)) & ...
-%                             (ids(:,4) == samp_c(cid)) & ...
-%                             (ids(:,5) == samp_b(bid)));
-%                         
-%                         chunks{i} = rg;
-%                         i=i+1;
-%                        
-%                     end
-%                 end
-%             end
-%         end
-%     end
-    
  
     
     % Initialize counts
@@ -147,7 +107,7 @@ else
     end
     for p=1:n_perm
         
-        disp(sprintf('Permutation %d out of %d >>>>>>',p,n_perm));
+        fprintf('Permutation %d out of %d >>>>>>\n',p,n_perm);
         
         CVperm = zeros(size(CV));
         t_perm = zeros(length(t),1);
@@ -222,13 +182,6 @@ else
             CVperm = CV(chunkperm,:);
             IDperm = ID(chunkperm,:);
         end
-        
-%         chunkperm=randperm(length(chunks));
-%       
-%         for i=1:length(chunks)
-%             t_perm(chunks{i},1) = unique(PRT.model(modelid).input.targets(chunks{chunkperm(i)})); 
-%             CVperm(chunks{i},:) = CV(chunks{chunkperm(i)},:);
-%         end
                 
         for f = 1:n_folds
             % configure data structure for prt_cv_fold
@@ -311,16 +264,10 @@ else
         case 'classifier'
             
             pval_b_acc = (total_greater_b_acc+1) / (n_perm+1);
-%             if pval_b_acc == 0
-%                 pval_b_acc = 1./n_perm;
-%             end
             
             pval_c_acc=zeros(n_class,1);
             for c=1:n_class
                 pval_c_acc(c) = (total_greater_c_acc(c)+1) / (n_perm+1);
-%                 if pval_c_acc(c) == 0
-%                     pval_c_acc(c) = 1./n_perm;
-%                 end
             end
             
             permutation.pvalue_b_acc = pval_b_acc;
@@ -328,25 +275,10 @@ else
             
         case 'regression'
             
-            pval_corr = (total_greater_corr+1) / (n_perm+1);
-%             if pval_corr == 0
-%                 pval_corr = 1./n_perm;
-%             end
-            
-            pval_mse = (total_greater_mse+1) / (n_perm+1);
-%             if pval_mse == 0
-%                 pval_mse = 1./n_perm;
-%             end
-            
-            pval_nmse = (total_greater_nmse+1) / (n_perm+1);
-%             if pval_nmse == 0
-%                 pval_nmse = 1./n_perm;
-%             end
-            
+            pval_corr = (total_greater_corr+1) / (n_perm+1);            
+            pval_mse = (total_greater_mse+1) / (n_perm+1);            
+            pval_nmse = (total_greater_nmse+1) / (n_perm+1);            
             pval_r2 = (total_greater_r2+1) / (n_perm+1);
-%             if pval_r2 == 0
-%                 pval_r2 = 1./n_perm;
-%             end
             
             permutation.pval_corr = pval_corr;
             permutation.pval_mse = pval_mse;

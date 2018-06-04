@@ -138,9 +138,11 @@ switch in.cv.type
                         vcl(inds(indss),1)=ic;
                         vcl(inds(indss),2)=nsg;
                         nsg=nsg+1;
+                        if ~isempty(indss)
+                            ns(ic) = ns(ic)+1;
+                        end
                     end
                 end
-                ns(ic) = nsg - 1;
             end
 %             % leave-one-subject-per-group-out
 %             [gids,d1] = unique(sort(vcl(:,1)), 'last');
